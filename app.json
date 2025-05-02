@@ -1,4 +1,37 @@
 {
-  "name": "FocuslyNativeApp",
-  "displayName": "FocuslyNativeApp"
-}
+    "name": "FocuslyNativeApp",
+    "displayName": "Focusly",
+    "expo": {
+      "name": "Focusly",
+      "slug": "focusly",
+      "version": "1.0.0",
+      "orientation": "portrait",
+      "icon": "./assets/icon.png",             
+      "userInterfaceStyle": "light",
+      "splash": {
+        "image": "./assets/splash.png",       
+        "resizeMode": "contain",
+        "backgroundColor": "#C1EAFE"
+      },
+      "updates": {
+        "fallbackToCacheTimeout": 0
+      },
+      "assetBundlePatterns": ["**/*"],
+      "ios": {
+        "supportsTablet": true,
+        "bundleIdentifier": "com.seunome.focusly"
+      },
+      "android": {
+        "package": "com.seunome.focusly",
+        "versionCode": 1,
+        "adaptiveIcon": {
+          "foregroundImage": "./assets/icon.png",
+          "backgroundColor": "#C1EAFE"
+        }
+      },
+      "web": {
+        "favicon": "./assets/favicon.png"
+      }
+    }
+  }
+  
