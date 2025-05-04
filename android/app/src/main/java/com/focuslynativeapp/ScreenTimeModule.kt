@@ -1,5 +1,7 @@
 package com.focuslynativeapp
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
@@ -9,6 +11,7 @@ import android.provider.Settings
 import android.util.Base64
 import com.google.gson.Gson
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import com.facebook.react.bridge.*
 import com.facebook.react.module.annotations.ReactModule
 import java.io.ByteArrayOutputStream
@@ -163,4 +166,60 @@ class ScreenTimeModule(reactContext: ReactApplicationContext) : ReactContextBase
             promise.reject("ERROR", "Erro ao obter uso de apps", e)
         }
     }
+
+    @ReactMethod
+    fun checkAndNotifyUsageLimit(promise: Promise) {
+        try {
+            val usageStatsManager = reactApplicationContext.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+            val endTime = System.currentTimeMillis()
+            val startTime = endTime - 1000 * 60 * 60 * 24 // últimas 24h
+
+            val usageStatsList = usageStatsManager.queryUsageStats(
+                UsageStatsManager.INTERVAL_DAILY,
+                startTime,
+                endTime
+            )
+
+            val monitoredApps = listOf(
+                "com.instagram.android",
+                "com.zhiliaoapp.musically", // TikTok
+                "com.facebook.katana"
+            )
+
+            for (stat in usageStatsList) {
+                val packageName = stat.packageName
+                val totalUsageSec = stat.totalTimeInForeground / 1000
+
+                if (monitoredApps.contains(packageName) && totalUsageSec > 3600) {
+                    sendNotification("Você usou o ${packageName} por mais de 1 hora hoje.")
+                }
+            }
+
+            promise.resolve(true)
+
+        } catch (e: Exception) {
+            Log.e("ScreenTimeModule", "Erro ao checar limite de uso", e)
+            promise.reject("ERROR", "Erro ao checar limite de uso", e)
+        }
+    }
+
+    private fun sendNotification(message: String) {
+        val notificationManager = reactApplicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channelId = "usagelimit_channel"
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, "Limite de Uso", NotificationManager.IMPORTANCE_DEFAULT)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notification = NotificationCompat.Builder(reactApplicationContext, channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle("Limite de Uso Atingido")
+            .setContentText(message)
+            .setAutoCancel(true)
+            .build()
+
+        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
+    }
+
 }

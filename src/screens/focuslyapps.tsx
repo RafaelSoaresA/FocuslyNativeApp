@@ -4,7 +4,7 @@ import {
   NativeModules,
   StyleSheet,
   ScrollView,
-  Button,
+  TouchableOpacity,
   Platform,
   Alert,
   Image,
@@ -115,18 +115,16 @@ export default function FocuslyAppsScreen() {
         />
       }
     >
-      <Text style={styles.title}>Tempo de Tela (últimas 24h):</Text>
+      <Text style={styles.title}>Tempo de Tela (últimas 24h)</Text>
 
       {!permissionGranted ? (
         <View style={styles.permissionContainer}>
           <Text style={styles.permissionText}>
             Precisamos da sua permissão para acessar o uso de seus aplicativos.
           </Text>
-          <Button
-            title="Ativar permissão de uso"
-            onPress={requestPermission}
-            color="#0F3D5E"
-          />
+          <TouchableOpacity style={styles.button} onPress={requestPermission}>
+            <Text style={styles.buttonText}>Ativar permissão de uso</Text>
+          </TouchableOpacity>
         </View>
       ) : null}
 
@@ -138,13 +136,18 @@ export default function FocuslyAppsScreen() {
         <Text style={styles.noDataText}>Nenhum dado disponível para exibir.</Text>
       ) : (
         screenTimeData.map((entry, index) => (
-          <View key={index} style={styles.entryContainer}>
-            {entry.icon ? (
-              <Image source={{ uri: entry.icon }} style={styles.icon} />
-            ) : null}
-            <Text style={styles.entryText}>
-              {entry.appName}: {Math.round(entry.totalTimeInForeground / 60)} min
-            </Text>
+          <View key={index} style={styles.card}>
+            <Image
+              source={{ uri: entry.icon }}
+              style={styles.icon}
+              resizeMode="contain"
+            />
+            <View style={styles.cardTextContainer}>
+              <Text style={styles.appName}>{entry.appName}</Text>
+              <Text style={styles.time}>
+                {Math.round(entry.totalTimeInForeground / 60)} minutos
+              </Text>
+            </View>
           </View>
         ))
       )}
@@ -160,26 +163,45 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 26,
+    marginBottom: 24,
     color: '#0F3D5E',
     fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: 20,
   },
-  entryContainer: {
+  card: {
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
   },
   icon: {
-    width: 32,
-    height: 32,
-    marginRight: 10,
-    borderRadius: 6,
+    width: 48,
+    height: 48,
+    marginRight: 16,
+    borderRadius: 8,
+    backgroundColor: '#e6f7ff',
   },
-  entryText: {
+  cardTextContainer: {
+    flex: 1,
+  },
+  appName: {
     fontSize: 16,
+    fontWeight: '600',
     color: '#0F3D5E',
+  },
+  time: {
+    fontSize: 14,
+    color: '#4E6E81',
+    marginTop: 4,
   },
   errorText: {
     color: 'red',
@@ -190,11 +212,24 @@ const styles = StyleSheet.create({
   permissionContainer: {
     marginBottom: 20,
     alignItems: 'center',
+    width: '100%',
   },
   permissionText: {
-    marginBottom: 10,
+    marginBottom: 12,
     textAlign: 'center',
     color: '#0F3D5E',
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#0F3D5E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
   },
   noDataText: {
     fontSize: 16,

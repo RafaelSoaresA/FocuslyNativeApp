@@ -16,7 +16,7 @@ const TabBarIcon = ({ focused, routeName }: { focused: boolean; routeName: strin
 
   if (routeName === 'Home') {
     icon = require('../src/assets/home.png');
-    size = { width: 44, height: 32 }; // Ajuste para não extrapolar
+    size = { width: 44, height: 32 };
   } else if (routeName === 'Info') {
     icon = require('../src/assets/informacoes.png');
     size = { width: 30, height: 30 };
