@@ -43,12 +43,8 @@ class ScreenTimeModule(reactContext: ReactApplicationContext) : ReactContextBase
             "com.whatsapp" to Triple("WhatsApp", "https://cdn-icons-png.flaticon.com/512/733/733585.png", 20),
             "com.zhiliaoapp.musically" to Triple("TikTok", "https://cdn-icons-png.flaticon.com/512/3046/3046121.png", 25),
             "com.twitter.android" to Triple("X (Twitter)", "https://cdn-icons-png.flaticon.com/512/733/733579.png", 20),
-            "com.snapchat.android" to Triple("Snapchat", "https://cdn-icons-png.flaticon.com/512/733/733585.png", 15),
             "org.telegram.messenger" to Triple("Telegram", "https://cdn-icons-png.flaticon.com/512/2111/2111646.png", 20),
-            "com.facebook.orca" to Triple("Messenger", "https://cdn-icons-png.flaticon.com/512/733/733559.png", 15),
             "com.google.android.youtube" to Triple("YouTube", "https://cdn-icons-png.flaticon.com/512/733/733646.png", 30),
-            "com.pinterest" to Triple("Pinterest", "https://cdn-icons-png.flaticon.com/512/733/733603.png", 20),
-            "com.reddit.frontpage" to Triple("Reddit", "https://cdn-icons-png.flaticon.com/512/733/733646.png", 20),
             "com.discord" to Triple("Discord", "https://cdn-icons-png.flaticon.com/512/733/733646.png", 20)
         )
     }
@@ -229,7 +225,7 @@ class ScreenTimeModule(reactContext: ReactApplicationContext) : ReactContextBase
                 set(Calendar.SECOND, 0)
                 set(Calendar.MILLISECOND, 0)
             }
-            val startTime = calendar.timeInMillis
+            val startTime = calendar.time.time
             val endTime = System.currentTimeMillis()
 
             Log.d("ScreenTimeModule", "startTime (ms): $startTime")
@@ -296,7 +292,7 @@ class ScreenTimeModule(reactContext: ReactApplicationContext) : ReactContextBase
 
             val monitoredApps = listOf(
                 "com.instagram.android",
-                "com.zhiliaoapp.musically", // TikTok
+                "com.zhiliaoapp.musically",
                 "com.facebook.katana"
             )
 

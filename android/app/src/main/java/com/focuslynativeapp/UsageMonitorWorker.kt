@@ -30,7 +30,7 @@ class UsageMonitorWorker(
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
-        val startTime = calendar.timeInMillis
+        val startTime = calendar.time.time
         val endTime = System.currentTimeMillis()
 
         // Logs de tempo
@@ -71,47 +71,6 @@ class UsageMonitorWorker(
 
         return Result.success()
     }
-
-
-    /*override fun doWork(): Result {
-        Log.d("UsageMonitorWorker", "Worker iniciado")
-
-        val usageStatsManager = applicationContext.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-        val endTime = System.currentTimeMillis()
-        val startTime = endTime - 15 * 60 * 1000 // últimos 15 minutos
-
-        val stats = usageStatsManager.queryUsageStats(
-            UsageStatsManager.INTERVAL_DAILY,
-            startTime,
-            endTime
-        )
-
-        stats?.forEach { usage ->
-            val appName = monitoredApps[usage.packageName]
-            if (appName != null && usage.totalTimeInForeground >= 15 * 60 * 1000) {
-                Log.d("UsageMonitorWorker", "$appName excedeu o tempo de uso")
-                sendNotification("Você usou o $appName por mais de 15 minutos.")
-            }
-        }
-
-        return Result.success()
-    }*/
-
-    /*private val monitoredApps = mapOf(
-        "com.facebook.katana" to Pair("Facebook", 30 * 60 * 1000),
-        "com.instagram.android" to Pair("Instagram", 20 * 60 * 1000),
-        "com.whatsapp" to Pair("WhatsApp", 25 * 60 * 1000),
-        "com.zhiliaoapp.musically" to Pair("TikTok", 15 * 60 * 1000),
-        "com.twitter.android" to Pair("X (Twitter)", 20 * 60 * 1000),
-        "com.snapchat.android" to Pair("Snapchat", 15 * 60 * 1000),
-        "org.telegram.messenger" to Pair("Telegram", 25 * 60 * 1000),
-        "com.facebook.orca" to Pair("Messenger", 20 * 60 * 1000),
-        "com.google.android.youtube" to Pair("YouTube", 2 * 60 * 1000),
-        "com.pinterest" to Pair("Pinterest", 20 * 60 * 1000),
-        "com.reddit.frontpage" to Pair("Reddit", 30 * 60 * 1000),
-        "com.discord" to Pair("Discord", 30 * 60 * 1000)
-    )*/
-
 
     private fun sendNotification(message: String) {
         val channelId = "usagelimit_channel"
