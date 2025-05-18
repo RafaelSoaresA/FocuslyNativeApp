@@ -11,7 +11,9 @@ import {
   View,
   ActivityIndicator,
   RefreshControl,
+  TextInput,
 } from 'react-native';
+
 
 const { ScreenTimeModule } = NativeModules;
 
@@ -20,6 +22,7 @@ interface ScreenTimeEntry {
   icon: string;
   totalTimeInForeground: number;
   packageName: string;
+  usageLimit: number;
 }
 
 export default function FocuslyAppsScreen() {
@@ -62,7 +65,7 @@ export default function FocuslyAppsScreen() {
       const data: ScreenTimeEntry[] = await ScreenTimeModule.getUsageStats();
 
       const sorted = data
-        .filter((entry) => entry.totalTimeInForeground > 0)
+        .filter((entry) => entry.totalTimeInForeground > -1)
         .sort((a, b) => b.totalTimeInForeground - a.totalTimeInForeground);
 
       setScreenTimeData(sorted);
@@ -136,19 +139,30 @@ export default function FocuslyAppsScreen() {
         <Text style={styles.noDataText}>Nenhum dado disponível para exibir.</Text>
       ) : (
         screenTimeData.map((entry, index) => (
-          <View key={index} style={styles.card}>
-            <Image
-              source={{ uri: entry.icon }}
-              style={styles.icon}
-              resizeMode="contain"
-            />
+                      <View key={index} style={styles.card}>
+            <Image source={{ uri: entry.icon }} style={styles.icon} resizeMode="contain" />
             <View style={styles.cardTextContainer}>
-              <Text style={styles.appName}>{entry.appName}</Text>
-              <Text style={styles.time}>
-                {Math.round(entry.totalTimeInForeground / 60)} minutos
-              </Text>
+                <Text style={styles.appName}>{entry.appName}</Text>
+                <Text style={styles.time}>
+                Tempo de uso hoje: {Math.floor(entry.totalTimeInForeground / 60)} min
+                </Text>
+                <Text style={styles.time}>
+                Tempo limite: {entry.usageLimit} min
+                </Text>
+                <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                defaultValue={entry.usageLimit.toString()}
+                onChangeText={(text) => {
+                    const limit = Number(text);
+                    if (!isNaN(limit)) {
+                    // Integre aqui com um método nativo, se necessário:
+                    // NativeModules.ScreenTimeModule.setUsageLimit(entry.packageName, limit);
+                    }
+                }}
+                />
             </View>
-          </View>
+            </View>
         ))
       )}
     </ScrollView>
@@ -169,6 +183,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginTop: 20,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 6,
+    borderRadius: 6,
+    width: 60,
+    textAlign: 'center',
   },
   card: {
     width: '100%',

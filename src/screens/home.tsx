@@ -67,6 +67,18 @@ export default function HomeScreen() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const logStats = async () => {
+      try {
+        await ScreenTimeModule.requestIgnoreBatteryOptimizations();
+        console.log('Opção de ignorar otimizações de bateria solicitada com sucesso.');
+      } catch (err: any) {
+        console.error('Erro ao executar a requisição:', err.message);
+      }
+    };
+    logStats();
+  }, []);
+
   const fetchScreenTime = async () => {
     try {
       const data: ScreenTimeEntry[] = await ScreenTimeModule.getUsageStats();
@@ -74,7 +86,7 @@ export default function HomeScreen() {
       const filtered = data
         .filter(
           (entry) =>
-            entry.totalTimeInForeground > 0 &&
+            entry.totalTimeInForeground > -1 &&
             allowedApps.some((name) =>
               entry.appName.toLowerCase().includes(name.toLowerCase())
             )

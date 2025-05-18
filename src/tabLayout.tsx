@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Image, View } from 'react-native';
 
 import HomeScreen from './screens/home';
-import InfoScreen from './screens/info';
+import { ConnectionsScreen } from './screens/connections';
 import FocuslyAppsScreen from './screens/focuslyapps';
 import ProfileScreen from './screens/profile';
 
@@ -17,8 +17,8 @@ const TabBarIcon = ({ focused, routeName }: { focused: boolean; routeName: strin
   if (routeName === 'Home') {
     icon = require('../src/assets/home.png');
     size = { width: 44, height: 32 };
-  } else if (routeName === 'Info') {
-    icon = require('../src/assets/informacoes.png');
+  } else if (routeName === 'Connections') {
+    icon = require('../src/assets/rede.png');
     size = { width: 30, height: 30 };
   } else if (routeName === 'FocuslyApps') {
     icon = require('../src/assets/focusly.png');
@@ -70,7 +70,7 @@ export default function TabLayout() {
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Info" component={InfoScreen} />
+        <Tab.Screen name="Connections" component={ConnectionsScreen} />
         <Tab.Screen name="FocuslyApps" component={FocuslyAppsScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
